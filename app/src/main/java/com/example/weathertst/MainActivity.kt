@@ -14,6 +14,12 @@ class MainActivity : AppCompatActivity() {
     private val mBinding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
+/*
+        val weatherRepository = WeatherRepository(WeatherDatabase())
+        val viewModelProviderFactory = WeatherViewModelProviderFactory(application, weatherRepository)
+        viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainFragmentViewModel::class.java)
+*/
+
         super.onCreate(savedInstanceState)
 
         _binding = ActivityMainBinding.inflate(layoutInflater)

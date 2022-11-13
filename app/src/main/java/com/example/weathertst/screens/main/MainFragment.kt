@@ -1,10 +1,13 @@
 package com.example.weathertst.screens.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weathertst.R
@@ -12,6 +15,7 @@ import com.example.weathertst.databinding.FragmentMainBinding
 import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
 
 import com.example.weathertst.utils.APP_ACTIVITY
+import com.example.weathertst.utils.Resource
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -27,16 +31,13 @@ class MainFragment : Fragment() {
     ): View? {
         _binding = FragmentMainBinding.inflate(layoutInflater,container,false)
         return mBinding.root
-
-        startWeather()
-
     }
 
     override fun onStart() {
         super.onStart()
         setupListeners()
         initialization()
-
+        startWeather()
     }
 
     private fun setupListeners(){
@@ -45,53 +46,88 @@ class MainFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initialization() {
         mViewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
-
-
-        val weatherObserver = Observer<CurrentWeatherResponse> {
+/*
+        mViewModel.currentWeatherCity.observe(this, Observer<CurrentWeatherResponse> {
 
             weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°"
             nameCity.text = it.name
             weatherCondition.text = it.weather[0].main
+            tempFeeling.text = it.main?.feels_like.toString()
 
-        }
-        mViewModel.myResponse.observe(this, weatherObserver)
+        })
+*/
 
+
+        mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+            Log.e("crush","crush1")
+            when(it) {
+                is Resource.Success -> {
+                    it.data?.let {
+                        weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
+                        nameCity.text = it.name
+                        weatherCondition.text = it.weather[0].main
+                        feeling.text = "Ощущается как: " + it.main?.let { it1 -> Math.round(it1.feels_like) }.toString() + "°С"
+                        pressure.text = "Давление: " + it.main?.pressure.toString() + " мм рт.ст."
+                        humidity.text = "Влажность: " + it.main?.humidity.toString() + " %"
+                        windSpeed.text = "Скорость ветра: " + it.wind?.speed.toString() +" м/c"
+
+                    }
+                }
+                is Resource.Error -> {
+                    it.message?.let { message ->
+                        Toast.makeText(activity, "Произошла ошибка: $message", Toast.LENGTH_LONG).show()
+                    }
+                }
+                is Resource.Loading -> {
+                }
+            }
+        } )
 
     }
 
     private fun startWeather(){
         mViewModel.cityLiveData.value = "Moscow"
-        mViewModel.getCurrentData()
+        mViewModel.getCurrentWeather()
     }
 
     private fun onButtonSearchClick(){
         mViewModel.cityLiveData.value = mBinding.searchLable.text.toString()
-
-        mViewModel.getCurrentData()
-
+        mViewModel.getCurrentWeather()
         mBinding.searchLable.setText("")
     }
 
     private fun onButtonMoreClick(){
 
         var bundle = Bundle()
+        mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+            when(it) {
+                is Resource.Success -> {
+                    it.data?.let {
+                        bundle.putSerializable("name",it.name)
+                        bundle.putSerializable("feeling",it.main?.feels_like)
+                        bundle.putSerializable("temp",it.main?.temp)
+                        bundle.putSerializable("pressure",it.main?.pressure)
+                        bundle.putSerializable("humidity",it.main?.humidity)
+                        bundle.putSerializable("windSpeed", it.wind?.speed)
+                    }
+                }
+                is Resource.Error -> {
+                    it.message?.let { message ->
+                        Toast.makeText(activity, "Произошла ошибка отправки: $message", Toast.LENGTH_LONG).show()
+                    }
+                }
+                is Resource.Loading -> {
+                }
+            }
+        })
 
-        val weatherToDopObserver = Observer<CurrentWeatherResponse> {
 
-            bundle.putSerializable("name",it.name)
-            bundle.putSerializable("feeling",it.main?.feels_like)
-            bundle.putSerializable("temp",it.main?.temp)
-            bundle.putSerializable("pressure",it.main?.pressure)
-            bundle.putSerializable("humidity",it.main?.humidity)
-            bundle.putSerializable("windSpeed", it.wind?.speed)
-
-
-        }
-
-        mViewModel.myResponse.observe(this,weatherToDopObserver)
         APP_ACTIVITY.navController.navigate(R.id.action_mainFragment_to_dopFragment,bundle)
+
+
     }
 
 }
