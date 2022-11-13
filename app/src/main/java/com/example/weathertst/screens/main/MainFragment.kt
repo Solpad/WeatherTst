@@ -1,5 +1,4 @@
 package com.example.weathertst.screens.main
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -12,12 +11,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weathertst.R
 import com.example.weathertst.databinding.FragmentMainBinding
-import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
-
 import com.example.weathertst.utils.APP_ACTIVITY
 import com.example.weathertst.utils.Resource
 import kotlinx.android.synthetic.main.fragment_main.*
-
 
 class MainFragment : Fragment() {
 
@@ -42,25 +38,12 @@ class MainFragment : Fragment() {
 
     private fun setupListeners(){
         btn_search.setOnClickListener { onButtonSearchClick() }
-        btn_more.setOnClickListener { onButtonMoreClick() }
-
+        btn_more.setOnClickListener { onButtonWeekWeatherClick() }
     }
 
     @SuppressLint("SetTextI18n")
     private fun initialization() {
-        mViewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
-/*
-        mViewModel.currentWeatherCity.observe(this, Observer<CurrentWeatherResponse> {
-
-            weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°"
-            nameCity.text = it.name
-            weatherCondition.text = it.weather[0].main
-            tempFeeling.text = it.main?.feels_like.toString()
-
-        })
-*/
-
-
+        mViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
         mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
             Log.e("crush","crush1")
             when(it) {
@@ -68,12 +51,11 @@ class MainFragment : Fragment() {
                     it.data?.let {
                         weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
                         nameCity.text = it.name
-                        weatherCondition.text = it.weather[0].main
+                        weatherCondition.text = it.weather[0].description
                         feeling.text = "Ощущается как: " + it.main?.let { it1 -> Math.round(it1.feels_like) }.toString() + "°С"
                         pressure.text = "Давление: " + it.main?.pressure.toString() + " мм рт.ст."
                         humidity.text = "Влажность: " + it.main?.humidity.toString() + " %"
                         windSpeed.text = "Скорость ветра: " + it.wind?.speed.toString() +" м/c"
-
                     }
                 }
                 is Resource.Error -> {
@@ -85,7 +67,6 @@ class MainFragment : Fragment() {
                 }
             }
         } )
-
     }
 
     private fun startWeather(){
@@ -99,7 +80,7 @@ class MainFragment : Fragment() {
         mBinding.searchLable.setText("")
     }
 
-    private fun onButtonMoreClick(){
+    private fun onButtonWeekWeatherClick(){
 
         var bundle = Bundle()
         mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
@@ -123,13 +104,8 @@ class MainFragment : Fragment() {
                 }
             }
         })
-
-
         APP_ACTIVITY.navController.navigate(R.id.action_mainFragment_to_dopFragment,bundle)
-
-
     }
-
 }
 
 

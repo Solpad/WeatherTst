@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/dopFragment"
-        android:name="com.example.weathertst.screens.dop.DopFragment"
+        android:name="com.example.weathertst.screens.dop.WeekFragment"
         android:label="fragment_dop"
-        tools:layout="@layout/fragment_dop" >
+        tools:layout="@layout/fragment_week" >
         <action
             android:id="@+id/action_dopFragment_to_mainFragment"
             app:destination="@id/mainFragment" />

@@ -23,34 +23,9 @@ import java.io.IOException
 
 class MainFragmentViewModel(app:Application): AndroidViewModel(app) {
 
-    val currentWeatherCity: MutableLiveData<CurrentWeatherResponse> by lazy{ MutableLiveData<CurrentWeatherResponse>() }
-
-
     val currentWeather: MutableLiveData<Resource<CurrentWeatherResponse>> = MutableLiveData()
     var currentWeatherResponse: CurrentWeatherResponse? = null
     var cityLiveData: MutableLiveData<String> = MutableLiveData()
-    fun getCurrentData():LiveData<CurrentWeatherResponse> {
-
-
-        val callMain = RetrofitRepository().retrofitService.getCurrentWeatherDataCity(cityLiveData.value!!)
-
-        callMain.enqueue(object : Callback<CurrentWeatherResponse> {
-            override fun onResponse(call: Call<CurrentWeatherResponse>, response: Response<CurrentWeatherResponse>) {
-
-                if (response.code() == 200) {
-                    val currentWeatherCityResponse = response.body()!!
-
-                    currentWeatherCity.postValue(currentWeatherCityResponse)
-
-                }
-            }
-
-            override fun onFailure(call: Call<CurrentWeatherResponse>, t: Throwable) {
-
-            }
-        })
-    return currentWeatherCity
-    }
 
     fun getCurrentWeather() = viewModelScope.launch {
         currentWeather.postValue(Resource.Loading())
@@ -74,32 +49,4 @@ class MainFragmentViewModel(app:Application): AndroidViewModel(app) {
         }
         return Resource.Error(response.message())
     }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication<WeatherApplication>().getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-            return when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            connectivityManager.activeNetworkInfo?. run {
-                return when(type) {
-                    ConnectivityManager.TYPE_WIFI -> true
-                    ConnectivityManager.TYPE_MOBILE -> true
-                    ConnectivityManager.TYPE_ETHERNET -> true
-                    else -> false
-                }
-            }
-        }
-        return false
-    }
-
-
 }
