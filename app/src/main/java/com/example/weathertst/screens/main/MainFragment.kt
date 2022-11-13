@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weathertst.R
 import com.example.weathertst.databinding.FragmentMainBinding
-import com.example.weathertst.model.WeatherResponse
+import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
 
 import com.example.weathertst.utils.APP_ACTIVITY
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -49,11 +49,11 @@ class MainFragment : Fragment() {
         mViewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
 
 
-        val weatherObserver = Observer<WeatherResponse> {
+        val weatherObserver = Observer<CurrentWeatherResponse> {
 
             weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°"
             nameCity.text = it.name
-            weatherCondition.text = it.weather.get(0).main
+            weatherCondition.text = it.weather[0].main
 
         }
         mViewModel.myResponse.observe(this, weatherObserver)
@@ -78,7 +78,7 @@ class MainFragment : Fragment() {
 
         var bundle = Bundle()
 
-        val weatherToDopObserver = Observer<WeatherResponse> {
+        val weatherToDopObserver = Observer<CurrentWeatherResponse> {
 
             bundle.putSerializable("name",it.name)
             bundle.putSerializable("feeling",it.main?.feels_like)

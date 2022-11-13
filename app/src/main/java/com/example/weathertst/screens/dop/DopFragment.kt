@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.weathertst.databinding.FragmentDopBinding
-import com.example.weathertst.databinding.FragmentMainBinding
-import kotlinx.android.synthetic.main.fragment_dop.*
 import kotlin.properties.Delegates
 
 class DopFragment : Fragment() {
@@ -16,11 +14,11 @@ class DopFragment : Fragment() {
     private val mBinding get() = _binding!!
     private lateinit var mViewModel: DopFragmentViewModel
     private lateinit var currentCity: String
-    private var currentFeeling by Delegates.notNull<Float>()
-    private var currentTemp by Delegates.notNull<Float>()
-    private var currentPressure by Delegates.notNull<Float>()
-    private var currentHumidity by Delegates.notNull<Float>()
-    private var currentWindSpeed by Delegates.notNull<Float>()
+    private var currentFeeling by Delegates.notNull<Double>()
+    private var currentTemp by Delegates.notNull<Double>()
+    private var currentPressure by Delegates.notNull<Int>()
+    private var currentHumidity by Delegates.notNull<Int>()
+    private var currentWindSpeed by Delegates.notNull<Double>()
 
 
     override fun onCreateView(
@@ -56,11 +54,11 @@ class DopFragment : Fragment() {
 
     private fun setValueBundle(){
         currentCity = arguments?.getSerializable("name") as String
-        currentFeeling = arguments?.getSerializable("feeling") as Float
-        currentTemp = arguments?.getSerializable("temp") as Float
-        currentPressure = arguments?.getSerializable("pressure") as Float
-        currentHumidity = arguments?.getSerializable("humidity") as Float
-        currentWindSpeed = arguments?.getSerializable("windSpeed") as Float
+        currentFeeling = arguments?.getSerializable("feeling") as Double
+        currentTemp = arguments?.getSerializable("temp") as Double
+        currentPressure = arguments?.getSerializable("pressure") as Int
+        currentHumidity = arguments?.getSerializable("humidity") as Int
+        currentWindSpeed = arguments?.getSerializable("windSpeed") as Double
 
     }
 }
