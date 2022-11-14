@@ -1,11 +1,9 @@
-package com.example.weathertst.screens.dop
+package com.example.weathertst.screens.week
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weathertst.api.RetrofitRepository
-import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
 import com.example.weathertst.model.weekWeather.WeekWeatherResponse
 import com.example.weathertst.utils.Resource
 import kotlinx.coroutines.launch

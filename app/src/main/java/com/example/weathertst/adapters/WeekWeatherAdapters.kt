@@ -1,6 +1,5 @@
 package com.example.weathertst.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,9 @@ import com.example.weathertst.model.weekWeather.InfoWeek
 class WeekWeatherAdapters(val weeksWeather:List<InfoWeek>): RecyclerView.Adapter<WeekWeatherAdapters.WeekWeatherViewHolder>() {
 
      class WeekWeatherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-         var texts = view.findViewById<TextView>(R.id.temp)
+         var date = view.findViewById<TextView>(R.id.date)
+         var temp = view.findViewById<TextView>(R.id.temp)
+         var temp_feel = view.findViewById<TextView>(R.id.temp_feel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekWeatherViewHolder {
@@ -22,7 +23,9 @@ class WeekWeatherAdapters(val weeksWeather:List<InfoWeek>): RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: WeekWeatherViewHolder, position: Int) {
         val week = weeksWeather[position]
-        holder.texts.text = week.main.temp.toString()
+        holder.date.text = week.dt_txt
+        holder.temp.text = "Температура " + week.main.temp.toString() + "°С"
+        holder.temp_feel.text = "Ощущается как "+week.main.feels_like.toString() + "°С"
     }
 
     override fun getItemCount(): Int {

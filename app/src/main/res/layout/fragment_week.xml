@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/normalMargin"
         android:gravity="center"
-        android:text="Moscow"
+        android:text="Прогноз на 5 дней"
         android:textColor="@color/black"
         android:textSize="@dimen/largeText"
         app:layout_constraintRight_toRightOf="parent"
@@ -27,7 +27,8 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         app:layout_constraintHorizontal_bias="0.5"
-        android:padding="4dp"
+        android:padding="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameCity"/>
 

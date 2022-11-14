@@ -1,8 +1,10 @@
 package com.example.weathertst.api
 
 import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
+import com.example.weathertst.model.geocoding.LocationResponse
 import com.example.weathertst.model.weekWeather.WeekWeatherResponse
 import com.example.weathertst.utils.AppId
+import com.example.weathertst.utils.lang
 
 import retrofit2.Call
 import retrofit2.Response
@@ -27,6 +29,20 @@ interface ApiRequest {
         @Query("units")
         units: String = com.example.weathertst.utils.units
     ): Response<CurrentWeatherResponse>
+    @GET("data/2.5/weather")
+
+    suspend fun getCurrentWeather(
+        @Query("lat")
+        lat: Double,
+        @Query("lon")
+        lon: Double,
+        @Query("appid")
+        apiKey: String = AppId,
+        @Query("units")
+        units: String = com.example.weathertst.utils.units,
+        @Query("lang")
+        language: String = lang
+    ): Response<CurrentWeatherResponse>
 
     @GET("/data/2.5/forecast")
     suspend fun getWeekWeather(
@@ -39,4 +55,16 @@ interface ApiRequest {
         @Query("units")
         units: String = com.example.weathertst.utils.units
     ):Response<WeekWeatherResponse>
+
+    @GET("geo/1.0/direct")
+    suspend fun getLocationUsingCity(
+        @Query("q")
+        city: String?,
+        @Query("appid")
+        apiKey: String? = AppId,
+        @Query("limit")
+        limit: Int = 5
+    ): Response<LocationResponse>
+
+
 }

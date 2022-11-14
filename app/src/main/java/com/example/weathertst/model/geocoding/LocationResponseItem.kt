@@ -1,6 +1,5 @@
 package com.example.weatherapp.models.geocoding
 
-import android.content.Context
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
