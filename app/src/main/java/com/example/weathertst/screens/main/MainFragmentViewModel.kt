@@ -8,8 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.models.geocoding.LocationResponseItem
 import com.example.weathertst.api.RetrofitRepository
+import com.example.weathertst.database.WeatherDatabase
 import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
 import com.example.weathertst.model.geocoding.LocationResponse
+import com.example.weathertst.repositroty.WeatherMvvmRepo
+import com.example.weathertst.repositroty.WeatherRepository
 import com.example.weathertst.utils.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -18,14 +21,20 @@ import java.io.IOException
 
 class MainFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
+    private val weatherRepository = WeatherRepository(WeatherDatabase(app))
+
     val currentWeather: MutableLiveData<Resource<CurrentWeatherResponse>> = MutableLiveData()
     var currentWeatherResponse: CurrentWeatherResponse? = null
     var cityLiveData: MutableLiveData<String> = MutableLiveData()
 
     var location: MutableLiveData<Resource<LocationResponse>> = MutableLiveData()
 
+    private val repositoryWeather = WeatherMvvmRepo()
+
     var locationResponse: LocationResponse? = null
+
     var selectedLocation: MutableLiveData<LocationResponseItem>? = null
+
     val currentWeatherLat: MutableLiveData<Resource<CurrentWeatherResponse>> = MutableLiveData()
     var currentWeatherResponseLat: CurrentWeatherResponse? = null
 
@@ -55,10 +64,9 @@ class MainFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getLocationUsingCity(city: String) = viewModelScope.launch {
         try {
-            Log.e("City",city)
             val response = RetrofitRepository().retrofitService.getLocationUsingCity(city)
-            Log.e("RESPONSE",response.body().toString())
             location.postValue(handleLocationUsingCityResponse(response))
+            repositoryWeather.setLocation(location)
         } catch (t: Throwable) {
             when (t) {
                 is IOException -> location.postValue(Resource.Error("Network Failure"))
@@ -105,5 +113,11 @@ class MainFragmentViewModel(app: Application) : AndroidViewModel(app) {
         return Resource.Error(response.message())
     }
 
+    fun saveLocation(location: LocationResponseItem) = viewModelScope.launch {
+        weatherRepository.upsert(location)
+    }
 
+    fun deleteLocation(location: LocationResponseItem) = viewModelScope.launch {
+        weatherRepository.deleteLocation(location)
+    }
 }

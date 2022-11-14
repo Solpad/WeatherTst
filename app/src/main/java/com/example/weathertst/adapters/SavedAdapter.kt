@@ -1,6 +1,5 @@
 package com.example.weathertst.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.models.geocoding.LocationResponseItem
 import com.example.weathertst.R
-import kotlinx.android.synthetic.main.search_item.view.*
+import kotlinx.android.synthetic.main.saved_item.view.*
 
-class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchLocationViewsHolder>() {
+class SavedAdapter: RecyclerView.Adapter<SavedAdapter.SavedLocationViewsHolder>() {
 
-
-    inner class SearchLocationViewsHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class SavedLocationViewsHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<LocationResponseItem>() {
@@ -26,36 +24,28 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchLocationViewsHolde
             return oldItem == newItem
         }
     }
-
     val differ = AsyncListDiffer(this, differCallback)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchLocationViewsHolder {
-        val itemView = LayoutInflater.from(parent.context) .inflate(R.layout.search_item, parent, false)
-        return SearchLocationViewsHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedLocationViewsHolder {
+        val itemView =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.saved_item, parent, false)
+        return SavedLocationViewsHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: SearchLocationViewsHolder, position: Int) {
+    override fun onBindViewHolder(holder: SavedLocationViewsHolder, position: Int) {
         val location = differ.currentList[position]
         holder.itemView.apply {
-            location_in_rv_search.text = generateLocation(location)
+            location_in_rv_saved.text = generateLocation(location)
 
-            if (location.addButtonStatus == true) {
-                button_in_rv_search.setImageResource(R.drawable.ic_check)
-                Log.e("RV","True")
-            } else if (location.addButtonStatus == false) {
-                button_in_rv_search.setImageResource(R.drawable.ic_add)
-                Log.e("RV","Fasle")
-            }
-
-            button_in_rv_search.setOnClickListener {
-                onItemClickListener?.let {
+            delete_in_rv_saved.setOnClickListener {
+                onItemClickListenerDelete?.let {
                     it(location)
                 }
-
-                if (location.addButtonStatus == true) {
-                    button_in_rv_search.setImageResource(R.drawable.ic_check)
-                } else if (location.addButtonStatus == false) {
-                    button_in_rv_search.setImageResource(R.drawable.ic_add)
+            }
+            setOnClickListener {
+                onItemClickListener?.let {
+                    it(location)
                 }
             }
         }
@@ -69,6 +59,12 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchLocationViewsHolde
 
     fun setOnItemClickListener(listener: (LocationResponseItem) -> Unit) {
         onItemClickListener = listener
+    }
+
+    private var onItemClickListenerDelete: ((LocationResponseItem) -> Unit)? = null
+
+    fun setOnItemClickListenerDelete(listener: (LocationResponseItem) -> Unit) {
+        onItemClickListenerDelete = listener
     }
 
     private fun generateLocation(location: LocationResponseItem): String {
@@ -89,4 +85,5 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchLocationViewsHolde
         }
         return generatedLocation
     }
+
 }

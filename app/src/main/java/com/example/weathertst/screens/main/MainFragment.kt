@@ -18,6 +18,7 @@ import com.example.weatherapp.models.geocoding.LocationResponseItem
 import com.example.weathertst.MainActivity
 import com.example.weathertst.R
 import com.example.weathertst.databinding.FragmentMainBinding
+import com.example.weathertst.repositroty.WeatherMvvmRepo
 import com.example.weathertst.utils.APP_ACTIVITY
 import com.example.weathertst.utils.Resource
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -37,6 +38,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val mBinding get() = _binding!!
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private val repositoryWeather = WeatherMvvmRepo()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,70 +51,38 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         userLocationInfo()
-        Log.e("Fragment","OnViewCreated")
-        go_search.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_savedFragment)
-        }
-    }
-    fun userLocationInfo(){
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity as MainActivity)
-        isLocationPermissionGranted()
-    }
-    override fun onStart() {
-        super.onStart()
-
         setupListeners()
         initialization()
 
+        go_search.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
+        }
     }
+    fun userLocationInfo(){
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("Fragment","OnDestroy")
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity as MainActivity)
+        if (mViewModel.selectedLocation == null) {
+            //isLocationPermissionGranted()
+        }
     }
 
     private fun setupListeners(){
         btn_search.setOnClickListener { onButtonSearchClick() }
         btn_more.setOnClickListener { onButtonWeekWeatherClick() }
     }
-    private fun saveToFile(context: Context, location: LocationResponseItem) {
-        try {
-            val fileOutputStream: FileOutputStream =
-                context.openFileOutput("fileName", Context.MODE_PRIVATE)
-            val objectOutputStream = ObjectOutputStream(fileOutputStream)
-            objectOutputStream.writeObject(location)
-            objectOutputStream.close()
-            fileOutputStream.close()
-        } catch (e: IOException) {
-            Log.d("qwert", "file not save")
-            e.printStackTrace()
-        }
-    }
+
     @SuppressLint("SetTextI18n")
     private fun initialization() {
+        repositoryWeather.getSelectedLocation().toString()
+        Log.e("location ",mViewModel.location.value?.data.toString())
+        Log.e("SelectedLocation ",repositoryWeather.getSelectedLocation().toString())
+        Log.e("SelectedLocation ",mViewModel.selectedLocation.toString())
 
-        var job: Job? = null
-        mBinding.searchLable.addTextChangedListener { editable ->
-            job?.cancel()
-            job = MainScope().launch {
-                editable?.let {
-                    if (editable.toString().isNotEmpty()) {
-                        mViewModel.getLocationUsingCity(editable.toString())
-                    }
-                }
-            }
-        }
-        mViewModel.location.value?.data?.let { saveToFile(activity as MainActivity, it[0]) }
-
-
-        Log.e("Tag",mViewModel.location.value?.data.toString())
-
-
-        Log.e("SelectedLocation",mViewModel.selectedLocation.toString())
+        mViewModel.selectedLocation = repositoryWeather.getSelectedLocation() // выбранная локация которую берем из search
 
         mViewModel.selectedLocation?.observe(viewLifecycleOwner, Observer { location ->
             var generatedLocation = ""
-
+            Log.e("Selected Location","IS NOT NULL!")
             if (location.local_names?.ru != null) {
                 generatedLocation += location.local_names.ru
             } else if (location.local_names?.en != null) {
@@ -130,32 +100,32 @@ class MainFragment : Fragment() {
         })
 
         //mViewModel.getCurrentWeatherLat(51.5073219, -0.1276474)
-      /*
-        mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+        /*
+          mViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
 
-            when(it) {
-                is Resource.Success -> {
-                    it.data?.let {
-                        weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
-                        nameCity.text = it.name
-                        weatherCondition.text = it.weather[0].description
-                        feeling.text = "Ощущается как: " + it.main?.let { it1 -> Math.round(it1.feels_like) }.toString() + "°С"
-                        pressure.text = "Давление: " + it.main?.pressure.toString() + " мм рт.ст."
-                        humidity.text = "Влажность: " + it.main?.humidity.toString() + " %"
-                        windSpeed.text = "Скорость ветра: " + it.wind?.speed.toString() +" м/c"
-                    }
-                }
-                is Resource.Error -> {
-                    it.message?.let { message ->
-                        Toast.makeText(activity, "Произошла ошибка: $message", Toast.LENGTH_LONG).show()
-                    }
-                }
-                is Resource.Loading -> {
-                }
-            }
-        } )
+              when(it) {
+                  is Resource.Success -> {
+                      it.data?.let {
+                          weatherDegrees.text = it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
+                          nameCity.text = it.name
+                          weatherCondition.text = it.weather[0].description
+                          feeling.text = "Ощущается как: " + it.main?.let { it1 -> Math.round(it1.feels_like) }.toString() + "°С"
+                          pressure.text = "Давление: " + it.main?.pressure.toString() + " мм рт.ст."
+                          humidity.text = "Влажность: " + it.main?.humidity.toString() + " %"
+                          windSpeed.text = "Скорость ветра: " + it.wind?.speed.toString() +" м/c"
+                      }
+                  }
+                  is Resource.Error -> {
+                      it.message?.let { message ->
+                          Toast.makeText(activity, "Произошла ошибка: $message", Toast.LENGTH_LONG).show()
+                      }
+                  }
+                  is Resource.Loading -> {
+                  }
+              }
+          } )
 
-       */
+         */
         mViewModel.location.observe(viewLifecycleOwner, Observer { it ->
             when(it) {
                 is Resource.Success -> {

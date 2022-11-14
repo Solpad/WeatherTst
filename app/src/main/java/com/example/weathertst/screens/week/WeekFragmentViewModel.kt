@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weathertst.api.RetrofitRepository
 import com.example.weathertst.model.weekWeather.WeekWeatherResponse
+import com.example.weathertst.repositroty.WeatherMvvmRepo
 import com.example.weathertst.utils.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -15,6 +16,7 @@ class WeekFragmentViewModel :ViewModel(){
     val weekWeather: MutableLiveData<Resource<WeekWeatherResponse>> = MutableLiveData()
     var weekWeatherResponse: WeekWeatherResponse? = null
     var cityLiveData: MutableLiveData<String> = MutableLiveData()
+    private val repositoryWeather = WeatherMvvmRepo()
 
     fun getWeekWeather() = viewModelScope.launch {
         weekWeather.postValue(Resource.Loading())

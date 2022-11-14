@@ -28,14 +28,12 @@ class MainActivity : AppCompatActivity() {
 
         mViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
 
-
+/*
         val locationFile = readFromFile(baseContext)
         if (locationFile != null) {
             mViewModel.selectedLocation = MutableLiveData(locationFile)
         }
-        else{
-        }
-
+ */
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)

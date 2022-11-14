@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_savedFragment"
             app:destination="@id/savedFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/dopFragment"
@@ -45,5 +48,8 @@
         <action
             android:id="@+id/action_searchFragment_to_savedFragment"
             app:destination="@id/savedFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>
