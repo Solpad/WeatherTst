@@ -20,5 +20,9 @@
 2. Выполненное задание нужно загрузить на github и отправить решение нам.
 
 # Демонстрация:
-https://user-images.githubusercontent.com/25458738/202289608-18ac378f-9d21-46a5-a382-1bbe81354da6.mp4
+
+
+https://user-images.githubusercontent.com/25458738/202291421-35c6b601-9a2a-41ae-9597-2058435da24c.mp4
+
+
 
