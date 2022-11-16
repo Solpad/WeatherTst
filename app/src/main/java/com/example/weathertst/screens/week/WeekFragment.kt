@@ -55,10 +55,8 @@ class WeekFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     it.data?.let {
-
                         adapterWeek = context?.let { it1 -> WeeksWeatherAdapters(it.list, it1) }!!
                         week_weathers_recycler.adapter = adapterWeek
-                        resources
                         week_weathers_recycler.layoutManager = LinearLayoutManager(context)
                     }
                 }

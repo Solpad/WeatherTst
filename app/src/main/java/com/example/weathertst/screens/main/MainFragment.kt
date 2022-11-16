@@ -46,7 +46,7 @@ class MainFragment : Fragment() {
         initialization()
 
         btn_go_saved.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_savedFragment)
         }
     }
 

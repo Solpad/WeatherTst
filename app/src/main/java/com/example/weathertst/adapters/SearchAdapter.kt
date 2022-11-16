@@ -41,10 +41,8 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchLocationViewsHolde
 
             if (location.addButtonStatus == true) {
                 button_in_rv_search.setImageResource(R.drawable.ic_check)
-                Log.e("RV","True")
             } else if (location.addButtonStatus == false) {
                 button_in_rv_search.setImageResource(R.drawable.ic_add)
-                Log.e("RV","Fasle")
             }
 
             button_in_rv_search.setOnClickListener {

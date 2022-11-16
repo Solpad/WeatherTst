@@ -56,6 +56,7 @@ class SearchFragmentViewModel (
 
     fun saveLocation(location: LocationResponseItem) = viewModelScope.launch {
         weatherRepository.upsert(location)
+
     }
 
     fun deleteLocation(location: LocationResponseItem) = viewModelScope.launch {

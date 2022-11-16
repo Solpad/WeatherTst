@@ -55,16 +55,16 @@ class SearchFragment : Fragment() {
             if(location.addButtonStatus == null){ location.addButtonStatus = false }
 
             if (location.addButtonStatus == false) {
+                Log.e("search save","true 1")
                 mViewModel.saveLocation(location)
+                Log.e("search save","true 2")
                 location.addButtonStatus = true
             } else if (location.addButtonStatus == true) {
                 mViewModel.deleteLocation(location)
                 location.addButtonStatus = false
             }
-            Log.e("Location search",location.toString())
             mViewModel.selectedLocation = MutableLiveData(location)
             repositoryWeather.setSelectedLocation(mViewModel.selectedLocation)
-            Log.e("SelectedLocation ",mViewModel.selectedLocation.toString())
 
         }
 
@@ -82,16 +82,15 @@ class SearchFragment : Fragment() {
         }
 
         back_to_saved_locations.setOnClickListener {
-            findNavController().navigate(R.id.action_searchFragment_to_mainFragment)
+            findNavController().navigate(R.id.action_searchFragment_to_savedFragment)
         }
 
         mViewModel.location.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
-                    response.data?.toString()?.let { Log.e("Search Check", it) }
-
                     response.data?.let { locationsResponse ->
                         searchAdapter.differ.submitList(locationsResponse.toList())
+                        Log.e("search ad",searchAdapter.differ.currentList.toString())
                     }
                 }
                 is Resource.Error -> {
