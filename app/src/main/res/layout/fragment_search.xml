@@ -17,7 +17,7 @@
             android:id="@+id/search_locations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Искать..."
+            android:hint="@string/search_hint"
             android:textColorHint="@color/black"
             android:imeOptions="actionSearch"
             android:drawableStart="@drawable/custom_search_item"
@@ -27,13 +27,14 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_toStartOf="@+id/back_to_saved_locations" />
+            android:layout_toStartOf="@+id/back_to_saved_locations"
+            android:autofillHints="" />
 
         <TextView
             android:id="@+id/back_to_saved_locations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Отмена"
+            android:text="@string/back"
             android:textSize="17sp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"

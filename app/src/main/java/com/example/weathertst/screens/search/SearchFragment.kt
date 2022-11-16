@@ -17,17 +17,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weathertst.R
 import com.example.weathertst.adapters.SearchAdapter
-import com.example.weathertst.databinding.FragmentSavedBinding
 import com.example.weathertst.databinding.FragmentSearchBinding
 import com.example.weathertst.repositroty.WeatherMvvmRepo
-import com.example.weathertst.screens.main.MainFragmentViewModel
-import com.example.weathertst.screens.week.WeekFragmentViewModel
 import com.example.weathertst.utils.Resource
-import kotlinx.android.synthetic.main.fragment_saved.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -38,10 +33,7 @@ class SearchFragment : Fragment() {
     private lateinit var mViewModel: SearchFragmentViewModel
     private val repositoryWeather = WeatherMvvmRepo()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,9 +47,7 @@ class SearchFragment : Fragment() {
             if(location.addButtonStatus == null){ location.addButtonStatus = false }
 
             if (location.addButtonStatus == false) {
-                Log.e("search save","true 1")
                 mViewModel.saveLocation(location)
-                Log.e("search save","true 2")
                 location.addButtonStatus = true
             } else if (location.addButtonStatus == true) {
                 mViewModel.deleteLocation(location)

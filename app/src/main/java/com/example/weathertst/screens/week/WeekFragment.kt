@@ -1,7 +1,6 @@
 package com.example.weathertst.screens.week
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +9,11 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weathertst.adapters.WeekWeatherAdapters
 import com.example.weathertst.adapters.WeeksWeatherAdapters
 import com.example.weathertst.databinding.FragmentWeekBinding
-import com.example.weathertst.model.weekWeather.InfoWeek
-import com.example.weathertst.model.weeksWeather.ItemWeekWeather
 import com.example.weathertst.repositroty.WeatherMvvmRepo
 import com.example.weathertst.utils.Resource
 import kotlinx.android.synthetic.main.fragment_week.*
-import kotlin.properties.Delegates
 
 class WeekFragment : Fragment() {
 

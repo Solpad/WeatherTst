@@ -1,6 +1,5 @@
 package com.example.weathertst.repositroty
 
-import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.models.geocoding.LocationResponseItem
 import com.example.weathertst.model.geocoding.LocationResponse

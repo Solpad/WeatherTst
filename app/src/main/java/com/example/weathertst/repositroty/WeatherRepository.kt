@@ -14,11 +14,4 @@ class WeatherRepository(private val db: WeatherDatabase) {
     fun getLocationsLive() =
         db.getWeatherDao().getLocationsLive()
 
-    fun getLocations() =
-        db.getWeatherDao().getLocations()
-
-    suspend fun checkByLatLon(lat: Double, lon: Double) =
-        db.getWeatherDao().checkByLatLon(lat, lon)
-
-
 }

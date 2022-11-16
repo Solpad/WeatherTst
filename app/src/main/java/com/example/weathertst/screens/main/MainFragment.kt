@@ -3,6 +3,7 @@ package com.example.weathertst.screens.main
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
         _binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         return mBinding.root
@@ -44,7 +45,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupListeners()
         initialization()
-
         btn_go_saved.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_savedFragment)
         }
@@ -52,10 +52,10 @@ class MainFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initialization() {
+
+
         repositoryWeather.getSelectedLocation().toString()
-
         mViewModel.selectedLocation = repositoryWeather.getSelectedLocation() // выбранная локация которую берем из search
-
         mViewModel.selectedLocation?.observe(viewLifecycleOwner, Observer { location ->
             var generatedLocation = ""
             if (location.local_names?.ru != null) {
@@ -69,7 +69,7 @@ class MainFragment : Fragment() {
                 generatedLocation += ", " + location.country
             }
             nameCity.text = generatedLocation
-
+            Log.e("sel loc","true")
             repositoryWeather.setLat(location.lat)
             repositoryWeather.setLon(location.lon)
             mViewModel.getCurrentWeatherLat(location.lat, location.lon)
@@ -99,18 +99,20 @@ class MainFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     it.data?.let {
+                        Log.e("cur","true")
                         weatherNow.visibility = View.VISIBLE
                         btn_weather_week.visibility = View.VISIBLE
-                        val mDrawableName = "ic_" + it.weather.get(0).icon
+                        val mDrawableName = "ic_" + it.weather[0].icon
                         val resID = resources.getIdentifier(mDrawableName, "drawable", PACKAGE_NAME )
                         mBinding.weatherImage.setImageResource(resID)
-                        mBinding.weatherDegrees.text =  it.main?.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
+                        mBinding.weatherDegrees.text =  it.main.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
                         mBinding.nameCity.text = it.name
                         mBinding.weatherCondition.text = it.weather[0].description
-                        mBinding.feeling.text = "Ощущается как: " + it.main?.let { it1 -> Math.round(it1.feels_like) } .toString() + "°С"
-                        mBinding.pressure.text = "Давление: " + it.main?.pressure.toString() + " гПа"
-                        mBinding.humidity.text = "Влажность: " + it.main?.humidity.toString() + " %"
-                        mBinding.windSpeed.text = "Скорость ветра: " + it.wind?.speed.toString() + " м/c"
+                        mBinding.feeling.text = "Ощущается как: " + it.main.let { it1 -> Math.round(it1.feels_like) }
+                            .toString() + "°С"
+                        mBinding.pressure.text = "Давление: " + it.main.pressure.toString() + " гПа"
+                        mBinding.humidity.text = "Влажность: " + it.main.humidity.toString() + " %"
+                        mBinding.windSpeed.text = "Скорость ветра: " + it.wind.speed.toString() + " м/c"
 
 
                     }
@@ -167,7 +169,6 @@ class MainFragment : Fragment() {
     }
 
     private fun isLocationPermissionGranted() {
-        var bundle = Bundle()
         val task = fusedLocationProviderClient.lastLocation
         if (ActivityCompat.checkSelfPermission(
                 activity as MainActivity,

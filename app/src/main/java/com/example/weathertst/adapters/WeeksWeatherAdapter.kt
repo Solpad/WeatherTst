@@ -2,9 +2,6 @@ package com.example.weathertst.adapters
 
 import android.R
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
-import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +31,7 @@ class WeeksWeatherAdapters(val weeksWeather:List<ItemWeekWeather>,val context:Co
     }
 
     override fun onBindViewHolder(holder: WeeksWeatherViewHolder, position: Int) {
+
         val week = weeksWeather[position]
 
         val dateNow = Date(week.dt.toLong()*1000)
