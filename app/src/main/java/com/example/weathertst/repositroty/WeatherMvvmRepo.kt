@@ -22,10 +22,23 @@ class WeatherMvvmRepo {
         selectedLocation = selectlocation
     }
 
+    fun getLon():Double?{
+        return lon
+    }
+    fun setLon(lonWeek: Double){
+        lon = lonWeek
+    }
+    fun getLat():Double?{
+        return lat
+    }
+    fun setLat(latWeek: Double){
+        lat = latWeek
+    }
     companion object{
         var locations: MutableLiveData<Resource<LocationResponse>> = MutableLiveData()
-        var locationResponse: LocationResponse? = null
         var selectedLocation: MutableLiveData<LocationResponseItem>? = null
+        var lat: Double? = null
+        var lon: Double? = null
 
     }
 }

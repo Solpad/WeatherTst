@@ -10,5 +10,7 @@
     <color name="blueBarSearch">#8E24AA</color>
     <color name="startBarSearch">#83eaf1</color>
     <color name="endBarSearch">#63a4ff</color>
+    <color name="startGreenBarSearch">#ffffff</color>
+    <color name="endGreenBarSearch">#A9A9A9</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

@@ -38,55 +38,8 @@ class MainFragmentViewModel(app: Application) : AndroidViewModel(app) {
     val currentWeatherLat: MutableLiveData<Resource<CurrentWeatherResponse>> = MutableLiveData()
     var currentWeatherResponseLat: CurrentWeatherResponse? = null
 
-    fun getCurrentWeather() = viewModelScope.launch {
-        currentWeather.postValue(Resource.Loading())
-        try {
-            val response =
-                RetrofitRepository().retrofitService.getCurrentWeather(cityLiveData.value!!)
-            currentWeather.postValue(handleCurrentWeatherResponse(response))
-        } catch (t: Throwable) {
-            when (t) {
-                is IOException -> currentWeather.postValue(Resource.Error("Network Failure"))
-                else -> currentWeather.postValue(Resource.Error("Conversion Error"))
-            }
-        }
-    }
 
-    private fun handleCurrentWeatherResponse(response: Response<CurrentWeatherResponse>): Resource<CurrentWeatherResponse> {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                currentWeatherResponse = resultResponse
-                return Resource.Success(currentWeatherResponse ?: resultResponse)
-            }
-        }
-        return Resource.Error(response.message())
-    }
 
-    fun getLocationUsingCity(city: String) = viewModelScope.launch {
-        try {
-            val response = RetrofitRepository().retrofitService.getLocationUsingCity(city)
-            location.postValue(handleLocationUsingCityResponse(response))
-            repositoryWeather.setLocation(location)
-        } catch (t: Throwable) {
-            when (t) {
-                is IOException -> location.postValue(Resource.Error("Network Failure"))
-                else -> location.postValue(Resource.Error("Conversion Error"))
-            }
-        }
-    }
-
-    private suspend fun handleLocationUsingCityResponse(response: Response<LocationResponse>): Resource<LocationResponse> {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                resultResponse.forEach { location ->
-                    location.id = location.lat.hashCode()
-                }
-                locationResponse = resultResponse
-                return Resource.Success(locationResponse ?: resultResponse)
-            }
-        }
-        return Resource.Error(response.message())
-    }
 
     fun getCurrentWeatherLat(lat: Double, lon: Double) = viewModelScope.launch {
 

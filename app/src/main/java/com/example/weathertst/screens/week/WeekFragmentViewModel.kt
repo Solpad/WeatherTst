@@ -1,10 +1,12 @@
 package com.example.weathertst.screens.week
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weathertst.api.RetrofitRepository
 import com.example.weathertst.model.weekWeather.WeekWeatherResponse
+import com.example.weathertst.model.weeksWeather.WeeksWeatherResponse
 import com.example.weathertst.repositroty.WeatherMvvmRepo
 import com.example.weathertst.utils.Resource
 import kotlinx.coroutines.launch
@@ -15,14 +17,37 @@ class WeekFragmentViewModel :ViewModel(){
 
     val weekWeather: MutableLiveData<Resource<WeekWeatherResponse>> = MutableLiveData()
     var weekWeatherResponse: WeekWeatherResponse? = null
-    var cityLiveData: MutableLiveData<String> = MutableLiveData()
-    private val repositoryWeather = WeatherMvvmRepo()
 
-    fun getWeekWeather() = viewModelScope.launch {
-        weekWeather.postValue(Resource.Loading())
+    val weeksWeather: MutableLiveData<Resource<WeeksWeatherResponse>> = MutableLiveData()
+    var weeksWeatherResponse: WeeksWeatherResponse? = null
+
+    fun getWeeksWeather(lat: Double, lon: Double) = viewModelScope.launch {
+        weeksWeather.postValue(Resource.Loading())
         try {
-            val response = RetrofitRepository().retrofitService.getWeekWeather(cityLiveData.value!!)
-            weekWeather.postValue(handleWeekWeatherResponse(response))
+            val response = RetrofitRepository().retrofitService.getWeeksWeather(lat, lon)
+            weeksWeather.postValue(handleWeeksWeatherResponse(response))
+        } catch (t: Throwable) {
+            when (t) {
+                is IOException -> weeksWeather.postValue(Resource.Error("Network Failure"))
+                else -> weeksWeather.postValue(Resource.Error("Conversion Error"))
+            }
+        }
+    }
+    private fun handleWeeksWeatherResponse(response: Response<WeeksWeatherResponse>): Resource<WeeksWeatherResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { resultResponse ->
+                weeksWeatherResponse = resultResponse
+                return Resource.Success(weeksWeatherResponse ?: resultResponse)
+            }
+        }
+        return Resource.Error(response.message())
+    }
+    /*
+    fun getWeeksWeather() = viewModelScope.launch {
+        weeksWeather.postValue(Resource.Loading())
+        try {
+            val response = RetrofitRepository().retrofitService.getWeeksWeather(cityLiveData.value!!)
+            weeksWeather.postValue(handleWeeksWeatherResponse(response))
         } catch (t: Throwable) {
             when (t) {
                 is IOException -> weekWeather.postValue(Resource.Error("Network Failure"))
@@ -31,14 +56,16 @@ class WeekFragmentViewModel :ViewModel(){
         }
     }
 
-    private fun handleWeekWeatherResponse(response: Response<WeekWeatherResponse>): Resource<WeekWeatherResponse> {
+    private fun handleWeeksWeatherResponse(response: Response<WeeksWeatherResponse>): Resource<WeeksWeatherResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                weekWeatherResponse = resultResponse
-                return Resource.Success(weekWeatherResponse ?: resultResponse)
+                weeksWeatherResponse = resultResponse
+                return Resource.Success(weeksWeatherResponse ?: resultResponse)
             }
         }
         return Resource.Error(response.message())
     }
 
+
+     */
 }
