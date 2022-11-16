@@ -3,7 +3,6 @@ package com.example.weathertst.database
 import android.content.Context
 import androidx.room.*
 import com.example.weatherapp.models.geocoding.LocationResponseItem
-import com.example.weathertst.db.WeatherDao
 
 @Database(
     entities = [LocationResponseItem::class],

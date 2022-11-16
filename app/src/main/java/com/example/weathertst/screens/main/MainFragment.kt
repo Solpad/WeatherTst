@@ -52,10 +52,9 @@ class MainFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initialization() {
-
-
         repositoryWeather.getSelectedLocation().toString()
-        mViewModel.selectedLocation = repositoryWeather.getSelectedLocation() // выбранная локация которую берем из search
+        mViewModel.selectedLocation =
+            repositoryWeather.getSelectedLocation() // выбранная локация которую берем из search
         mViewModel.selectedLocation?.observe(viewLifecycleOwner, Observer { location ->
             var generatedLocation = ""
             if (location.local_names?.ru != null) {
@@ -69,7 +68,6 @@ class MainFragment : Fragment() {
                 generatedLocation += ", " + location.country
             }
             nameCity.text = generatedLocation
-            Log.e("sel loc","true")
             repositoryWeather.setLat(location.lat)
             repositoryWeather.setLon(location.lon)
             mViewModel.getCurrentWeatherLat(location.lat, location.lon)
@@ -99,20 +97,23 @@ class MainFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     it.data?.let {
-                        Log.e("cur","true")
+                        Log.e("cur", "true")
                         weatherNow.visibility = View.VISIBLE
                         btn_weather_week.visibility = View.VISIBLE
                         val mDrawableName = "ic_" + it.weather[0].icon
-                        val resID = resources.getIdentifier(mDrawableName, "drawable", PACKAGE_NAME )
+                        val resID = resources.getIdentifier(mDrawableName, "drawable", PACKAGE_NAME)
                         mBinding.weatherImage.setImageResource(resID)
-                        mBinding.weatherDegrees.text =  it.main.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
+                        mBinding.weatherDegrees.text =
+                            it.main.let { it1 -> Math.round(it1.temp) }.toString() + "°С"
                         mBinding.nameCity.text = it.name
                         mBinding.weatherCondition.text = it.weather[0].description
-                        mBinding.feeling.text = "Ощущается как: " + it.main.let { it1 -> Math.round(it1.feels_like) }
-                            .toString() + "°С"
+                        mBinding.feeling.text =
+                            "Ощущается как: " + it.main.let { it1 -> Math.round(it1.feels_like) }
+                                .toString() + "°С"
                         mBinding.pressure.text = "Давление: " + it.main.pressure.toString() + " гПа"
                         mBinding.humidity.text = "Влажность: " + it.main.humidity.toString() + " %"
-                        mBinding.windSpeed.text = "Скорость ветра: " + it.wind.speed.toString() + " м/c"
+                        mBinding.windSpeed.text =
+                            "Скорость ветра: " + it.wind.speed.toString() + " м/c"
 
 
                     }
@@ -161,10 +162,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        btn_my_location.setOnClickListener {
-            userLocationInfo()
-        }
-
+        btn_my_location.setOnClickListener { userLocationInfo() }
         btn_more.setOnClickListener { onButtonWeekWeatherClick() }
     }
 

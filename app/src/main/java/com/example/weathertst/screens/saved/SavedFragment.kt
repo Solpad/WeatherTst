@@ -1,8 +1,6 @@
 package com.example.weathertst.screens.saved
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,23 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.SavedAdapter
-import com.example.weatherapp.models.geocoding.LocationResponseItem
-import com.example.weathertst.MainActivity
 import com.example.weathertst.R
 import com.example.weathertst.databinding.FragmentSavedBinding
-import com.example.weathertst.model.geocoding.LocalNames
 import com.example.weathertst.repositroty.WeatherMvvmRepo
-import com.example.weathertst.screens.week.WeekFragmentViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_saved.*
-import kotlinx.android.synthetic.main.fragment_week.*
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.ObjectOutputStream
 
 class SavedFragment : Fragment() {
 
@@ -42,7 +30,6 @@ class SavedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSavedBinding.inflate(layoutInflater, container, false)
-
         mViewModel = ViewModelProvider(this)[SavedFragmentViewModel::class.java]
 
         mViewModel.getLocationsLive().observe(viewLifecycleOwner, Observer {
@@ -52,15 +39,10 @@ class SavedFragment : Fragment() {
             adapterList.setOnItemClickListener { location ->
                 mViewModel.selectedLocation = MutableLiveData(location)
                 repositoryWeather.setSelectedLocation(mViewModel.selectedLocation)
-
                 findNavController().navigate(R.id.action_savedFragment_to_mainFragment)
             }
-            adapterList.setOnItemClickListenerDelete { location ->
-                mViewModel.deleteLocation(location)
-            }
+            adapterList.setOnItemClickListenerDelete { location ->  mViewModel.deleteLocation(location) }
         })
-
-
         return mBinding.root
     }
 
@@ -69,11 +51,8 @@ class SavedFragment : Fragment() {
         go_search_locations_in_search_fragment.setOnClickListener {
             findNavController().navigate(R.id.action_savedFragment_to_searchFragment)
         }
-
         back_to_current_weather.setOnClickListener {
             findNavController().navigate(R.id.action_savedFragment_to_mainFragment)
         }
-
     }
-
 }

@@ -33,8 +33,6 @@ class SearchFragment : Fragment() {
     private lateinit var mViewModel: SearchFragmentViewModel
     private val repositoryWeather = WeatherMvvmRepo()
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -45,7 +43,6 @@ class SearchFragment : Fragment() {
 
         searchAdapter.setOnItemClickListener { location ->
             if(location.addButtonStatus == null){ location.addButtonStatus = false }
-
             if (location.addButtonStatus == false) {
                 mViewModel.saveLocation(location)
                 location.addButtonStatus = true
@@ -62,7 +59,6 @@ class SearchFragment : Fragment() {
         search_locations.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
-
                 editable?.let {
                     if (editable.toString().isNotEmpty()) {
                         mViewModel.getLocationUsingCity(editable.toString())

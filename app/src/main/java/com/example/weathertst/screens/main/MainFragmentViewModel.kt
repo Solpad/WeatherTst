@@ -7,10 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.models.geocoding.LocationResponseItem
 import com.example.weathertst.api.RetrofitRepository
-import com.example.weathertst.database.WeatherDatabase
 import com.example.weathertst.model.currentWeather.CurrentWeatherResponse
 import com.example.weathertst.model.geocoding.LocationResponse
-import com.example.weathertst.repositroty.WeatherRepository
 import com.example.weathertst.utils.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -31,7 +29,6 @@ class MainFragmentViewModel(app: Application) : AndroidViewModel(app) {
         try {
             val response = RetrofitRepository().retrofitService.getCurrentWeather(lat, lon)
             currentWeatherLat.postValue(handleCurrentWeatherResponseLat(response))
-
         } catch (t: Throwable) {
             when (t) {
                 is IOException -> currentWeatherLat.postValue(Resource.Error("Network Failure"))

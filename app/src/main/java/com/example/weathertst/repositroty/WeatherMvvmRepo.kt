@@ -34,18 +34,10 @@ class WeatherMvvmRepo {
         lat = latWeek
     }
 
-    fun getLists():List<LocationResponseItem>?{
-        return lists
-    }
-    fun setLists(listsThis: List<LocationResponseItem>){
-        lists = listsThis
-    }
     companion object{
         var locations: MutableLiveData<Resource<LocationResponse>> = MutableLiveData()
         var selectedLocation: MutableLiveData<LocationResponseItem>? = null
         var lat: Double? = null
         var lon: Double? = null
-        var lists: List<LocationResponseItem>? = null
-
     }
 }
